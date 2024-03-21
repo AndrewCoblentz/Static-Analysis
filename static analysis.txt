@@ -1,0 +1,70 @@
+
+public class Employee {
+	String name;
+	String address;
+	String hobby;
+//.... 
+}
+
+public class DBfunctions  {
+
+		private Statement stmt=null;
+		private Connection conn=null;
+
+	public DBfunctions {
+		static final String USER="billchu";
+		static final String PASSWORD="hacker";
+		try{
+			conn=getDBConnection();
+			stmt=conn.createStatement();
+			conn=DriverManager.getConnection("jdbc:msql://localhost/EMP",USER,PASSWORD);
+		} catch (SQLException sqle) {  
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+			LocalDateTime now = LocalDateTime.now();
+			enterlog("sql initialization error"+dtf.format(now) );}
+	}
+	
+	public Employee searchEmployee(String idemployee {1}) throws SQLException, IOException{
+		try {   
+			String searchEmployee="SELECT * from EMPLOYEES WHERE IDEMPLOYEE=?";
+			PreparedStatement stmt = conn.prepareStatement(searchEmployee);
+			stmt.setString(1,idemployee {1});
+			ResultSet{2} rs=stmt.executeQuery();
+			Resultset found{2} = rs.next();
+
+			if (found)
+		 	 { Employee employee=new Employee;
+			   employee{2} setName=found {2}.getString("employeename");
+		           employee {2} setAddress=found.getString("employeeaddress");
+			   return employee {2}; }
+			else
+		 	   { enterlog("no employee:"+idemployee);
+    		} catch (SQLException sqle) {  enterlog("sql error:"+idemployee{1});}
+		
+	}
+
+	void enterlog(String s{1});
+	{ Logger logger=Logger.getLogger(DBfunctions.class);
+	  logger.error(s{1});
+	}
+}
+
+public class FirstServlet extends HttpServlet { 
+	private static final ong serialVersionUID =1L;
+	private String idemployee;
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+				throws Servlet Exception, IOException
+	{       
+		DBfunctions db;
+		Employee employee;
+
+		idemployee {1} = request.getParameter("idemployee"); 
+		PrintWriter out=response.getWriter();
+		out.println("<html> <body> GET parameter:" + idemployee {1});
+		employee{2} = db.searchEmployee(idemployee {1});
+		out.println("<html> <body> GET parameter:" + employee {2}.name);
+		out.println("<html> <body> GET parameter:" + employee{2}.address);
+		out.println("</body> </html>");
+		
+	}
